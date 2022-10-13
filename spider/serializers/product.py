@@ -44,9 +44,6 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     enterprises = serializers.StringRelatedField(many=True)
     price = serializers.IntegerField(source="last_price")
 
-    def get_price(self, obj):
-        return obj.prises.last().price
-
     class Meta:
         model = Product
         fields = (
