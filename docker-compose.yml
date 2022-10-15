@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=spider-dev
+      - POSTGRES_USER=spideruser
+      - POSTGRES_PASSWORD=spider
+    ports:
+      - "5431:5432"
+  web:
+    build: .
+    command: sh -c "poetry run python3 manage.py migrate && poetry run python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=spider-dev
+      - DB_USER=spideruser
+      - DB_PASS=spider
+    depends_on:
+      - db
